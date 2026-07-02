@@ -1,0 +1,44 @@
+{
+  "name": "textlint-lsp",
+  "version": "0.1.1",
+  "description": "LSP server for textlint — pluggable natural language linting for any editor",
+  "keywords": [
+    "textlint",
+    "lsp",
+    "language-server",
+    "lint",
+    "japanese",
+    "markdown",
+    "mdx"
+  ],
+  "license": "MIT",
+  "author": "yasutakeyohei",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yasutakeyohei/textlint-lsp.git"
+  },
+  "main": "dist/server.js",
+  "bin": {
+    "textlint-lsp": "bin/textlint-lsp"
+  },
+  "files": [
+    "dist",
+    "bin",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {},
+  "peerDependencies": {
+    "textlint": ">=13.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
