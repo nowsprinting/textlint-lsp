@@ -89,7 +89,7 @@ async function createLinter(): Promise<any> {
   if (cachedLinter) return cachedLinter;
   const { createLinter, loadTextlintrc } = textlintModule;
   const descriptor = await loadTextlintrc({
-    configFilePath: pathModule.join(textlintRoot, ".textlintrc.json"),
+    configFilePath: pathModule.join(textlintRoot, ".textlintrc"),
   });
   cachedLinter = createLinter({ descriptor });
   return cachedLinter;
