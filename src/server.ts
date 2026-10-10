@@ -1,5 +1,6 @@
 import * as fs from "fs";
 import * as pathModule from "path";
+import { fileURLToPath } from "url";
 
 // ============================================================
 // textlint-lsp — pluggable natural language linting for LSP
@@ -29,9 +30,12 @@ let workspaceRoot = "";
 // ============================================================
 
 function uriToPath(uri: string): string {
-  let p = uri.replace(/^file:\/\/\//, "").replace(/^file:\/\//, "");
-  if (process.platform === "win32") p = p.replace(/^\/([a-zA-Z]:)/, "$1");
-  return p;
+  try {
+    return fileURLToPath(uri);
+  } catch (e) {
+    log(`uriToPath failed: ${uri}: ${e}`);
+    return "";
+  }
 }
 
 // ============================================================
