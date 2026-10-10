@@ -73,7 +73,8 @@ function loadTextlint(forUri: string): boolean {
   try {
     textlintModule = require(pathModule.join(root, "node_modules", "textlint"));
     return true;
-  } catch (_e) {
+  } catch (e) {
+    log(`loadTextlint failed: ${root}: ${e}`);
     return false;
   }
 }
@@ -156,7 +157,8 @@ async function lint(uri: string): Promise<any[]> {
     const diagnostics = toDiagnostics(result.messages ?? [], doc.text);
     lintCache.set(uri, { version: doc.version, diagnostics });
     return diagnostics;
-  } catch (_e) {
+  } catch (e) {
+    log(`lint failed: ${uri}: ${e}`);
     return [];
   }
 }
@@ -241,7 +243,8 @@ async function getCodeActions(
       result = await linter.lintText(doc.text, filePath);
       process.chdir(originalCwd);
       caCache.set(uri, { text: doc.text, result });
-    } catch (_e) {
+    } catch (e) {
+      log(`getCodeActions failed: ${uri}: ${e}`);
       return [];
     }
   }
@@ -445,7 +448,10 @@ function handleRequest(msg: any) {
       const rid = id;
       getCodeActions(uri, params.context?.diagnostics ?? [])
         .then((a) => send({ jsonrpc: "2.0", id: rid, result: a }))
-        .catch((_e: any) => send({ jsonrpc: "2.0", id: rid, result: [] }));
+        .catch((e: any) => {
+          log(`codeAction failed: ${uri}: ${e}`);
+          send({ jsonrpc: "2.0", id: rid, result: [] });
+        });
       break;
     }
 
@@ -479,7 +485,9 @@ function processBuffer() {
     rawBuffer = rawBuffer.slice(hl + cl);
     try {
       handleRequest(JSON.parse(body.toString("utf-8")));
-    } catch {}
+    } catch (e) {
+      log(`handleRequest failed: ${e}`);
+    }
   }
 }
 
