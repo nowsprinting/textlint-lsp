@@ -270,7 +270,13 @@ async function getCodeActions(
   }
 
   const isMdx = uri.endsWith(".mdx") || doc.languageId?.toLowerCase() === "mdx";
-  const toComment = (body: string) => (isMdx ? `{/* ${body} */}` : body);
+  const isReview = uri.endsWith(".re");
+  const toComment = (directive: string) =>
+    isReview
+      ? `#@# ${directive}`
+      : isMdx
+        ? `{/* <!-- ${directive} --> */}`
+        : `<!-- ${directive} -->`;
   const docLines = doc.text.split("\n");
 
   const actions: any[] = [];
@@ -335,7 +341,7 @@ async function getCodeActions(
                   start: { line: msgLine, character: 0 },
                   end: { line: msgLine, character: 0 },
                 },
-                newText: `${toComment(`<!-- textlint-disable ${msg.ruleId} -->`)}\n`,
+                newText: `${toComment(`textlint-disable ${msg.ruleId}`)}\n`,
               },
               // Inserting at the start of the next line fails when the message is on the last line
               {
@@ -343,7 +349,7 @@ async function getCodeActions(
                   start: { line: msgEndLine, character: msgEndLineLength },
                   end: { line: msgEndLine, character: msgEndLineLength },
                 },
-                newText: `\n${toComment(`<!-- textlint-enable ${msg.ruleId} -->`)}`,
+                newText: `\n${toComment(`textlint-enable ${msg.ruleId}`)}`,
               },
             ],
           },
@@ -365,7 +371,7 @@ async function getCodeActions(
                   start: { line: msgLine, character: 0 },
                   end: { line: msgLine, character: 0 },
                 },
-                newText: `${toComment(`<!-- textlint-disable -->`)}\n`,
+                newText: `${toComment("textlint-disable")}\n`,
               },
             ],
           },
