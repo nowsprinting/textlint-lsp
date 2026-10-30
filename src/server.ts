@@ -160,7 +160,9 @@ async function lint(uri: string): Promise<any[]> {
   const cached = lintCache.get(uri);
   if (cached && cached.version === doc.version) return cached.diagnostics;
 
-  const ext = doc.languageId === "mdx" ? ".mdx" : ".md";
+  const ext =
+    pathModule.extname(uriToPath(uri)) ||
+    (doc.languageId === "mdx" ? ".mdx" : ".md");
 
   try {
     const originalCwd = process.cwd();
@@ -240,7 +242,9 @@ async function getCodeActions(
   const doc = docs.get(uri);
   if (!doc || !loadTextlint(uri)) return [];
 
-  const ext = doc.languageId === "mdx" ? ".mdx" : ".md";
+  const ext =
+    pathModule.extname(uriToPath(uri)) ||
+    (doc.languageId === "mdx" ? ".mdx" : ".md");
   const filePath = pathModule.join(
     textlintRoot,
     `.textlint-lsp-cache/_ca${ext}`,
