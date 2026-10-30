@@ -1,6 +1,6 @@
 {
   "name": "textlint-lsp",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "LSP server for textlint — pluggable natural language linting for any editor",
   "keywords": [
     "textlint",
